@@ -25,8 +25,10 @@ export interface Project {
     title: string;
     description?: string;
     status: 'active' | 'completed' | 'on_hold' | 'cancelled';
+    priority: 'low' | 'medium' | 'high';
     deadline?: Date;
     rate?: number;
+    budget?: number;
     created_at: Date;
     updated_at: Date;
 }
@@ -72,12 +74,15 @@ export interface ProjectInput {
     title: string;
     description?: string;
     status?: 'active' | 'completed' | 'on_hold' | 'cancelled';
+    priority?: 'low' | 'medium' | 'high';
     deadline?: string;
     rate?: number;
+    budget?: number;
 }
 
 export interface ProjectQuery {
     status?: 'active' | 'completed' | 'on_hold' | 'cancelled';
+    priority?: 'low' | 'medium' | 'high';
     client_id?: number;
     page?: number;
     limit?: number;

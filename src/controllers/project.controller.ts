@@ -9,7 +9,7 @@ export const createProject = async (
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
-        const { client_id, title, description, status, deadline, rate } = req.body;
+        const { client_id, title, description, status, priority, deadline, rate, budget } = req.body;
 
         if (!title) {
             res.status(400).json({ message: 'Project title is required' });
@@ -21,8 +21,10 @@ export const createProject = async (
             title,
             description,
             status,
+            priority,
             deadline,
             rate,
+            budget,
         });
 
         res.status(201).json(project);
@@ -41,6 +43,7 @@ export const getProjects = async (
 
         const query = {
             status: req.query.status as any,
+            priority: req.query.priority as any,
             client_id: req.query.client_id
                 ? parseInt(req.query.client_id as string, 10)
                 : undefined,
@@ -87,15 +90,17 @@ export const updateProject = async (
         const userId = req.user!.userId;
         const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
         const projectId = parseInt(idParam, 10);
-        const { client_id, title, description, status, deadline, rate } = req.body;
+        const { client_id, title, description, status, priority, deadline, rate, budget } = req.body;
 
         const updated = await ProjectService.updateProject(userId, projectId, {
             client_id,
             title,
             description,
             status,
+            priority,
             deadline,
             rate,
+            budget,
         });
 
         if (!updated) {

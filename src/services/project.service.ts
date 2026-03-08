@@ -6,7 +6,7 @@ export const createProject = async (
     userId: number,
     input: ProjectInput
 ): Promise<Project> => {
-    const { client_id, title, description, status, deadline, rate } = input;
+    const { client_id, title, description, status, priority, deadline, rate, budget } = input;
 
     if (client_id) {
         const [rows] = await pool.execute<any[]>(
@@ -20,16 +20,18 @@ export const createProject = async (
 
     const [result] = await pool.execute<any>(
         `INSERT INTO projects 
-        (user_id, client_id, title, description, status, deadline, rate)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        (user_id, client_id, title, description, status, priority, deadline, rate, budget)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
             userId,
             client_id ?? null,
             title,
             description ?? null,
             status ?? 'active',
+            priority ?? 'medium',
             deadline ?? null,
             rate ?? null,
+            budget ?? null,
         ]
     );
 
@@ -51,6 +53,11 @@ export const getProjects = async (
     if (query.status) {
         conditions.push('p.status = ?');
         values.push(query.status);
+    }
+
+    if (query.priority) {
+        conditions.push('p.priority = ?');
+        values.push(query.priority);
     }
 
     if (query.client_id) {
@@ -119,20 +126,22 @@ export const updateProject = async (
         }
     }
 
-    const { client_id, title, description, status, deadline, rate } = input;
+    const { client_id, title, description, status, priority, deadline, rate, budget } = input;
 
     await pool.execute({
         sql: `UPDATE projects
         SET client_id = ?, title = ?, description = ?,
-        status = ?, deadline = ?, rate = ?
+        status = ?, priority = ?, deadline = ?, rate = ?, budget = ?
         WHERE id = ? AND user_id = ?`,
         values: [
             client_id ?? existing.client_id,
             title ?? existing.title,
             description ?? existing.description,
             status ?? existing.status,
+            priority ?? existing.priority,
             deadline ?? existing.deadline,
             rate ?? existing.rate,
+            budget ?? existing.budget,
             projectId,
             userId,
         ],
