@@ -1,18 +1,5 @@
 import pool from '../db/connections';
-import { Client } from '../types';
-
-export interface ClientInput {
-    name: string;
-    email?: string;
-    company?: string;
-    notes?: string;
-}
-
-export interface ClientQuery {
-    search?: string;
-    page?: number;
-    limit?: number;
-}
+import { Client, ClientInput, ClientQuery } from '../types';
 
 export const createClient = async (
     userId: number,

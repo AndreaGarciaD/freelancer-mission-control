@@ -52,3 +52,33 @@ export interface AuthenticatedRequest extends Express.Request {
     user?: JwtPayload;
 }
 
+//Client types
+export interface ClientInput {
+    name: string;
+    email?: string;
+    company?: string;
+    notes?: string;
+}
+
+export interface ClientQuery {
+    search?: string;
+    page?: number;
+    limit?: number;
+}
+
+//Project types
+export interface ProjectInput {
+    client_id?: number;
+    title: string;
+    description?: string;
+    status?: 'active' | 'completed' | 'on_hold' | 'cancelled';
+    deadline?: string;
+    rate?: number;
+}
+
+export interface ProjectQuery {
+    status?: 'active' | 'completed' | 'on_hold' | 'cancelled';
+    client_id?: number;
+    page?: number;
+    limit?: number;
+}
