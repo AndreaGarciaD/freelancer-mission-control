@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as AuthService from '../services/auth.service';
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { name, email, password } = req.body;
 
@@ -13,16 +13,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         await AuthService.registerUser({ name, email, password });
 
         res.status(201).json({ message: 'Account registered successfully' });
-    } catch (error: any) {
-        if (error.message === 'Email already in use') {
-            res.status(409).json({ message: error.message });
-            return
-        }
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error) {
+        next(error);
     }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { email, password } = req.body;
 
@@ -34,11 +30,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const result = await AuthService.loginUser({ email, password });
 
         res.status(200).json(result);
-    } catch (error: any) {
-        if (error.message === 'Invalid email or password') {
-            res.status(401).json({ message: error.message });
-            return;
-        }
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error) {
+        next(error);
     }
 };

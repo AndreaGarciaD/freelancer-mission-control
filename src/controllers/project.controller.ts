@@ -1,10 +1,11 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/authenticate';
 import * as ProjectService from '../services/project.service';
 
 export const createProject = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -25,19 +26,15 @@ export const createProject = async (
         });
 
         res.status(201).json(project);
-    } catch (error: any) {
-        console.error('[createProject]', error);
-        if (error.message === 'Client not found') {
-            res.status(404).json({ message: error.message });
-            return;
-        }
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error) {
+        next(error);
     }
 };
 
 export const getProjects = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -54,14 +51,14 @@ export const getProjects = async (
         const result = await ProjectService.getProjects(userId, query);
         res.status(200).json(result);
     } catch (error) {
-        console.error('[getProjects]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const getProjectById = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -77,14 +74,14 @@ export const getProjectById = async (
 
         res.status(200).json(project);
     } catch (error) {
-        console.error('[getProjectById]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const updateProject = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -107,19 +104,15 @@ export const updateProject = async (
         }
 
         res.status(200).json(updated);
-    } catch (error: any) {
-        console.error('[updateProject]', error);
-        if (error.message === 'Client not found') {
-            res.status(404).json({ message: error.message });
-            return;
-        }
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error) {
+        next(error);
     }
 };
 
 export const deleteProject = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -135,7 +128,6 @@ export const deleteProject = async (
 
         res.status(204).send();
     } catch (error) {
-        console.error('[deleteProject]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };

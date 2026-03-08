@@ -1,5 +1,6 @@
 import pool from '../db/connections';
 import { Project, ProjectInput, ProjectQuery } from '../types';
+import { AppError } from '../utils/AppError';
 
 export const createProject = async (
     userId: number,
@@ -13,7 +14,7 @@ export const createProject = async (
             [client_id, userId]
         );
         if (rows.length === 0) {
-            throw new Error('Client not found');
+            throw new AppError('Client not found', 404);
         }
     }
 
@@ -114,7 +115,7 @@ export const updateProject = async (
             [input.client_id, userId]
         );
         if (rows.length === 0) {
-            throw new Error('Client not found');
+            throw new AppError('Client not found', 404);
         }
     }
 

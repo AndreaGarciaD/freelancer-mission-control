@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../db/connections';
 import { config } from '../config/env';
 import { RegisterInput, LoginInput, JwtPayload, User } from '../types';
+import { AppError } from '../utils/AppError';
 
 const SALT_ROUNDS = 10;
 
@@ -15,7 +16,7 @@ export const registerUser = async (input: RegisterInput): Promise<void> => {
     )
 
     if (rows.length > 0) {
-        throw new Error('Email already in use');
+        throw new AppError('Email already in use', 409);
     }
 
     const password_hash = await bcrypt.hash(password, SALT_ROUNDS);
@@ -38,7 +39,7 @@ export const loginUser = async (
     );
 
     if (rows.length === 0) {
-        throw new Error('Invalid email or password');
+        throw new AppError('Invalid email or password', 401);
     }
 
     const user: User = rows[0];
@@ -46,7 +47,7 @@ export const loginUser = async (
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-        throw new Error('Invalid email or password');
+        throw new AppError('Invalid email or password', 401);
     }
 
 

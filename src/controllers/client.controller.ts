@@ -1,10 +1,11 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/authenticate';
 import * as ClientService from '../services/client.service';
 
 export const createClient = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -24,14 +25,14 @@ export const createClient = async (
 
         res.status(201).json(client);
     } catch (error) {
-        console.error('[createClient]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const getClients = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -45,14 +46,14 @@ export const getClients = async (
         const result = await ClientService.getClients(userId, query);
         res.status(200).json(result);
     } catch (error) {
-        console.error('[getClients]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const getClientById = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -68,14 +69,14 @@ export const getClientById = async (
 
         res.status(200).json(client);
     } catch (error) {
-        console.error('[getClientById]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const updateClient = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -97,14 +98,14 @@ export const updateClient = async (
 
         res.status(200).json(updated);
     } catch (error){
-        console.error('[updateClient]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
 
 export const deleteClient = async (
     req: AuthenticatedRequest,
-    res: Response
+    res: Response,
+    next: NextFunction
 ): Promise<void> => {
     try {
         const userId = req.user!.userId;
@@ -118,9 +119,8 @@ export const deleteClient = async (
             return;
         }
 
-        res.status(204).send(); // 204 = success with no content to return
+        res.status(204).send();
     } catch (error){
-        console.error('[deleteClient]', error);
-        res.status(500).json({ message: 'Internal server error' });
+        next(error);
     }
 };
