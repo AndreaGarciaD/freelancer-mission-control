@@ -84,6 +84,7 @@ export interface ProjectQuery {
     status?: 'active' | 'completed' | 'on_hold' | 'cancelled';
     priority?: 'low' | 'medium' | 'high';
     client_id?: number;
+    search?: string;
     page?: number;
     limit?: number;
 }

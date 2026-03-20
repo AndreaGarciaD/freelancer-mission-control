@@ -65,14 +65,23 @@ export const getProjects = async (
         values.push(query.client_id);
     }
 
+    if (query.search) {
+        conditions.push('(p.title LIKE ? OR p.description LIKE ? OR c.name LIKE ?)');
+        values.push(`%${query.search}%`, `%${query.search}%`, `%${query.search}%`);
+    }
+
     const whereClause = conditions.join(' AND ');
 
     const [countRows] = await pool.execute<any[]>(
-        `SELECT COUNT(*) as total FROM projects p WHERE ${whereClause}`,
+        `SELECT COUNT(*) as total 
+        FROM projects p
+        LEFT JOIN clients c ON p.client_id = c.id
+        WHERE ${whereClause}`,
         values
     );
 
     const total = countRows[0].total;
+
 
     const [rows] = await pool.query<any[]>(
         `SELECT p.*, c.name as client_name

@@ -44,6 +44,7 @@ export const getProjects = async (
         const query = {
             status: req.query.status as any,
             priority: req.query.priority as any,
+            search: req.query.search as string | undefined,
             client_id: req.query.client_id
                 ? parseInt(req.query.client_id as string, 10)
                 : undefined,
