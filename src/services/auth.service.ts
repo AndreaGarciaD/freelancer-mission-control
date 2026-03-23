@@ -63,3 +63,14 @@ export const loginUser = async (
     const { password_hash, ...userWithoutPassword } = user;
     return { token, user: userWithoutPassword };
 }
+
+export const getMe = async (userId: number): Promise<Omit<User, 'password_hash'>> => {
+    const [rows] = await pool.execute<any[]>(
+        'SELECT id, name, email, created_at, updated_at FROM users WHERE id = ?',
+        [userId]
+    );
+
+    if (rows.length === 0) throw new AppError('User not found', 404);
+
+    return rows[0];
+};

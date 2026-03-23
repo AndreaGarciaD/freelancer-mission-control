@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as AuthService from '../services/auth.service';
+import { AuthenticatedRequest } from '../types';
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -30,6 +31,20 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         const result = await AuthService.loginUser({ email, password });
 
         res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getMe = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const userId = (req as AuthenticatedRequest).user!.userId;
+        const user = await AuthService.getMe(userId);
+        res.status(200).json(user);
     } catch (error) {
         next(error);
     }
