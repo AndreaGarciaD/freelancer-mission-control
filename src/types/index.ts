@@ -88,3 +88,23 @@ export interface ProjectQuery {
     page?: number;
     limit?: number;
 }
+
+export interface Phase {
+    id: number;
+    project_id: number;
+    title: string;
+    description?: string;
+    status: 'pending' | 'in_progress' | 'completed';
+    order_index: number;
+    due_date?: Date;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface PhaseInput {
+    title: string;
+    description?: string;
+    status?: 'pending' | 'in_progress' | 'completed';
+    order_index?: number;
+    due_date?: string;
+}
