@@ -108,3 +108,19 @@ export interface PhaseInput {
     order_index?: number;
     due_date?: string;
 }
+
+export interface Document {
+    id: number;
+    project_id: number;
+    title: string;
+    url: string;
+    type: 'doc' | 'meeting' | 'design' | 'other';
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface DocumentInput {
+    title: string;
+    url: string;
+    type?: 'doc' | 'meeting' | 'design' | 'other';
+}
