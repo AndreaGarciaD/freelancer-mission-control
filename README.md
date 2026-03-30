@@ -1,4 +1,4 @@
-# Freelancer Mission Control — Backend API
+# Freelancer Mission Control - Backend API
 
 A RESTful API for freelancers to manage clients, projects, phases, and documents. Built with a modular, production-style architecture using Node.js, Express, and TypeScript.
 
@@ -45,7 +45,7 @@ src/
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/freelancer-mission-control.git
+git clone https://github.com/AndreaGarciaD/freelancer-mission-control.git
 cd freelancer-mission-control
 
 # Install dependencies
